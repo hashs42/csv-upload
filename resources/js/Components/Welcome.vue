@@ -164,9 +164,11 @@ export default {
             this.msg = ''
             this.form.processing = true
             this.form.post(this.route('csv.upload'), {
+                preserveState: false,
                 onSuccess: () => {
                     this.form.processing = false
-                    this.form.upload = null
+                    this.form.reset()
+                    this.uploadedFile = null
                     this.msg = 'Successfully Uploaded!'
                 },
                 onError: () => {
