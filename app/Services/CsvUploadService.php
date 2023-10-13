@@ -14,14 +14,21 @@ class CsvUploadService
         try {
             $file = $request->file('upload');
             $fileName = $file->getClientOriginalName();
-            $fileContents = file($file->getPathname());
+
+            $csv = file($file);
+            $chunks = array_chunk($csv,1000);
+            $header = [];
+            $batch  = Bus::batch([])->dispatch();
 
             $userUpload = self::userUpload($fileName);
 
-            if (count($fileContents) > 1) {
-                CsvUploadJob::dispatch($fileContents, $fileName, $userUpload);
-            } else {
-                return false;
+            foreach ($chunks as $key => $chunk) {
+                $data = array_map('str_getcsv', $chunk);
+                if($key == 0){
+                    $header = $data[0];
+                    unset($data[0]);
+                }
+                $batch->add(new CsvUploadJob($data, $header, $userUpload));
             }
 
         } catch (\Exception $ex) {
