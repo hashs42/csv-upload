@@ -16,14 +16,6 @@ class CsvUploadService
             $fileName = $file->getClientOriginalName();
             $fileContents = file($file->getPathname());
 
-//            $utf8Contents = mb_convert_encoding($fileContents, 'UTF-8', 'UTF-8');
-//
-//            $lines = explode("\n", $utf8Contents);
-//
-//            dd($utf8Contents);
-
-            //TODO: removal of non-utf8 (chinese characters etc)
-
             $userUpload = self::userUpload($fileName);
 
             if (count($fileContents) > 1) {
