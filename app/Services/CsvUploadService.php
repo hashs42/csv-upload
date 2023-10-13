@@ -24,6 +24,12 @@ class CsvUploadService
 
             foreach ($chunks as $key => $chunk) {
                 $data = array_map('str_getcsv', $chunk);
+
+                foreach ($data as &$field) {
+                    $field = mb_convert_encoding($field, 'UTF-8', 'UTF-8');
+                    $field = preg_replace('/[^\x{0000}-\x{007F}]+/u', '', $field);
+                }
+
                 if($key == 0){
                     $header = $data[0];
                     unset($data[0]);
