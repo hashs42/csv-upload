@@ -39,3 +39,5 @@ Route::middleware([
 
     Route::post('csv-upload', [CsvUploadController::class, 'upload'])->name('csv.upload');
 });
+
+Route::get('test', [CsvUploadController::class, 'test']);
